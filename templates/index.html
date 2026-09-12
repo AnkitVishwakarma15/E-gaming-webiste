@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esports Club - Official Arena</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+
+  <!-- Tech Geometric Background Overlay -->
+  <div class="bg-overlay"></div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-badge">PRO</span>
+      ESPORTS ARENA
+    </div>
+    <nav>
+      <a href="#bgmi-section">BGMI</a>
+      <a href="#freefire-section">Free Fire</a>
+      <a href="#rulebook">Rulebook</a>
+    </nav>
+  </header>
+
+  <!-- Flash Message Banner -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for message in messages %}
+          <div class="flash-box">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-live-badge"><span class="pulse-dot"></span> REGISTRATIONS OPEN</div>
+    <h1>VaZra<br>GameVerse</h1>
+    <p>Select your battlefield, lock in your squad roster, and fight for collegiate glory.</p>
+    <div class="ff-hazard-stripe"></div>
+  </section>
+
+  <!-- Arena Container with Posters -->
+  <div class="arena-container">
+    
+    <!-- BGMI Showcase Card (LOCKED / COMING SOON) -->
+    <section id="bgmi-section" class="game-showcase-card is-locked">
+      <div class="card-media-wrap">
+        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="BGMI Tournament" class="card-poster" />
+        <div class="poster-overlay-tag locked-overlay">LAUNCHING SOON</div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-top-bar">
+          <span class="badge-tag">Battle Royale</span>
+          <span class="status-pill coming-soon-pill">⏳ STARTS SOON</span>
+        </div>
+        <h2>BATTLEGROUNDS MOBILE INDIA</h2>
+        <p class="showcase-desc">
+          Lobby configuration and slot allocation are currently being finalized. Registrations will unlock shortly—stay tuned to the club group!
+        </p>
+
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Format</span>
+            <span class="spec-value">Squad (TPP)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Map</span>
+            <span class="spec-value">Erangel</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Status</span>
+            <span class="spec-value" style="color: #ff5500;">Locked</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Platform</span>
+            <span class="spec-value">Mobile Only</span>
+          </div>
+        </div>
+
+        <!-- Disabled Button -->
+        <button type="button" class="btn-ff-action btn-disabled" disabled>
+          🔒 REGISTRATION OPENS SOON
+        </button>
+      </div>
+    </section>
+    <!-- Free Fire Showcase Card (OPEN & ACTIVE) -->
+    <section id="freefire-section" class="game-showcase-card is-open">
+      <div class="card-media-wrap">
+        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Free Fire Tournament" class="card-poster" />
+        <div class="poster-overlay-tag open-overlay">🔥 SLOTS OPEN</div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-top-bar">
+          <span class="badge-tag">Fast Paced</span>
+          <span class="status-pill open-live-pill">
+            <span class="live-dot"></span> REGISTRATION OPEN
+          </span>
+        </div>
+        <h2>FREE FIRE MAX</h2>
+        <p class="showcase-desc">
+          Official Bermuda clash squad and survival showdown. Fast reflexes, precise headshots, and synchronized clan coordination.
+        </p>
+
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Format</span>
+            <span class="spec-value">Solo (1v1)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Map</span>
+            <span class="spec-value">Bermuda</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Status</span>
+            <span class="spec-value" style="color: #00aa44;">● Live Now</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Entry Fee</span>
+            <span class="spec-value">₹25 per person</span>
+          </div>
+        </div>
+
+        <a href="/register/freefire" class="btn-ff-action">
+          REGISTER FOR FREE FIRE <span>»</span>
+        </a>
+      </div>
+    </section>
+   
+  </div>
+
+  <!-- Official Rulebook & Scoring -->
+  <section id="rulebook" class="rulebook-section">
+    <div class="section-heading-wrap">
+      <h2>OFFICIAL RULES & SCORING</h2>
+      <div class="ff-hazard-stripe"></div>
+    </div>
+    
+    <div class="rules-grid">
+      <div class="rule-card">
+        <h3>📌 MATCH DIRECTIVES</h3>
+        <ul class="rules-list">
+          <li><strong>No Emulators:</strong> iPads, tablets, and PC emulators are strictly prohibited. Standard smartphones only.</li>
+          <li><strong>Room Access:</strong> Custom Room ID & Password will be distributed on the official WhatsApp group 15 minutes prior to match launch.</li>
+          <li><strong>Zero Tolerance:</strong> Third-party configs, scripts, or unfair teaming up results in an immediate permanent ban.</li>
+          <li><strong>Match Result:</strong> Team leader must take an end-game screenshot displaying team placements and kill counts.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card">
+        <h3>🏆 SCORING SYSTEM</h3>
+        <table class="scoring-table">
+          <thead>
+            <tr>
+              <th>Placement</th>
+              <th>Prizes</th>
+              <th>Per Kill Prizes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#1 Winner (Booyah / WWCD)</td>
+              <td>200 Rupees</td>
+              <td>10 Rupees / Kill</td>
+            </tr>
+            <tr>
+              <td>#2 Runner-Up</td>
+              <td>100 Rupees</td>
+              <td>10 Rupees / Kill</td>
+            </tr>
+            <tr>
+              <td>#3 Third Place</td>
+              <td>50 Rupees</td>
+              <td>10 Rupees / Kill</td>
+            </tr>
+            <tr>
+              <td>Apex Killer (Highest Kill Count)</td>
+              <td>-</td>
+              <td>10 Rupees / Kill</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Collegiate Esports Club. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
