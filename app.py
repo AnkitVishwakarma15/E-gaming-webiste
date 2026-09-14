@@ -1,5 +1,6 @@
 import os
 import datetime
+import traceback
 import requests
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
@@ -67,22 +68,24 @@ def submit_registration():
     screenshot_url = ""
 
     try:
-        # 1. Upload image to ImgBB cloud storage
+        # 1. Upload image to ImgBB cloud storage using a proper file tuple (filename, bytes)
         file_bytes = file.read()
         imgbb_response = requests.post(
             "https://api.imgbb.com/1/upload",
             data={"key": IMGBB_API_KEY},
-            files={"image": file_bytes}
+            files={"image": (file.filename, file_bytes)}
         )
         
         result_json = imgbb_response.json()
         if result_json.get("success"):
             screenshot_url = result_json["data"]["url"]
         else:
+            print("ImgBB Rejection Response:", result_json)
             flash("Failed to upload screenshot to cloud storage.")
             return redirect(url_for('register_page', game_type=game_slug))
 
     except Exception as e:
+        traceback.print_exc()
         print(f"Cloud upload error: {e}")
         flash("Error uploading payment proof.")
         return redirect(url_for('register_page', game_type=game_slug))
