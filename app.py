@@ -19,7 +19,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # CONFIGURATION
 # -------------------------------------------------------------
 GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw7clzvcXxn36IF0CREgdUy0dtdgBtDzt8fO8mekpWR24egbqH5-3-cehqlGmy0ku_F/exec"
-IMGBB_API_KEY = "f33a14c009a89002ad764cbb698c2c60"
+IMGBB_API_KEY = "60952399b196ee3750f4ee2c50a9ad4f"
 
 
 def allowed_file(filename):
