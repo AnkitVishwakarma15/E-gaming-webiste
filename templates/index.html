@@ -11,11 +11,11 @@
   <!-- Tech Geometric Background Overlay -->
   <div class="bg-overlay"></div>
 
-  <!-- Navbar -->
+<!-- Navbar -->
   <header class="navbar">
     <div class="logo">
-      <span class="logo-badge">PRO</span>
-      ESPORTS ARENA
+      <img src="{{ url_for('static', filename='vazra-logo.png') }}" alt="VaZra Logo" class="nav-logo-img" />
+      VaZra 
     </div>
     <nav>
       <a href="#bgmi-section">BGMI</a>
@@ -23,7 +23,7 @@
       <a href="#rulebook">Rulebook</a>
     </nav>
   </header>
-
+</div>
   <!-- Flash Message Banner -->
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -39,10 +39,19 @@
   <section class="hero">
     <div class="hero-live-badge"><span class="pulse-dot"></span> REGISTRATIONS OPEN</div>
     <h1>VaZra<br>GameVerse</h1>
+    
+    <!-- Champion Privilege Subtitle (Inline Header) -->
+    <div class="hero-perk-note">
+      <div class="hero-perk-header">
+        <span class="perk-lightning">⚡</span>
+        <h4>CHAMPION PRIVILEGE</h4>
+      </div>
+      <p>Winners get <strong>free entry into the next tournament</strong> to defend their crown and claim back-to-back glory!</p>
+    </div>
+
     <p>Select your battlefield, lock in your squad roster, and fight for collegiate glory.</p>
     <div class="ff-hazard-stripe"></div>
   </section>
-
   <!-- Arena Container with Posters -->
   <div class="arena-container">
     
@@ -151,7 +160,6 @@
           <li><strong>Match Result:</strong> Team leader must take an end-game screenshot displaying team placements and kill counts.</li>
         </ul>
       </div>
-
       <div class="rule-card">
         <h3>🏆 SCORING SYSTEM</h3>
         <table class="scoring-table">
@@ -188,9 +196,18 @@
       </div>
     </div>
   </section>
+ <!-- About Us Section Positioned Under Match Directives -->
+        <div class="card-about-section">
+          <h1>About VaZra GameVerse</h1>
+          <p>
+            <strong>VaZra GameVerse</strong> is a growing esports and gaming community at <strong>ABES</strong>, built to bring gamers together to <strong>connect, compete, and grow</strong>. We organize regular tournaments across popular games like <span class="highlight-game">Free Fire MAX</span>, <span class="highlight-game">BGMI</span>, <span class="highlight-game">Valorant</span>, and more, giving players a platform to showcase their skills, compete for <strong>exciting rewards</strong>, and become part of a competitive gaming community.
+          </p>
+          <p class="community-tagline">Play. Compete. Belong.</p>
+        </div>
 
   <footer>
-    <p>© 2026 Collegiate Esports Club. All Rights Reserved.</p>
+    <p>© VaZra GameVerse <br>
+      A community built for gamers who want to <strong>CONNECT • COMPETE • CONQUER</strong></p>
   </footer>
 
 </body>
