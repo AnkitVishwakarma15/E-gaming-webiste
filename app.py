@@ -5,6 +5,7 @@ import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from werkzeug.utils import secure_filename
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 
 app = Flask(__name__)
 app.secret_key = "esports_club_key"
@@ -147,5 +148,18 @@ def submit_registration():
 
     return redirect(url_for('register_page', game_type=game_slug))
 
+# Secret Admin Route to Download Live Excel Registrations from Render
+@app.route('/admin/download-excel')
+def download_excel():
+    if os.path.exists(EXCEL_FILE):
+        return send_file(
+            EXCEL_FILE, 
+            as_attachment=True, 
+            download_name="Tournament_Registrations.xlsx"
+        )
+    return "No registrations found yet or file was reset by Render.", 404
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+    
+    
