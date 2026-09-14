@@ -35,7 +35,7 @@
   <section class="register-section">
     <div class="form-wrapper">
       <h1 class="form-title">{{ game_title }}</h1>
-      <p class="form-subtitle">Complete squad registration to receive Room ID and entry slot.</p>
+      <p class="form-subtitle">Complete registration to receive Room ID and entry slot.</p>
       <div class="ff-hazard-stripe" style="margin-bottom: 2rem;"></div>
 
       <form action="/submit-registration" method="POST" enctype="multipart/form-data">
@@ -44,7 +44,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="name">Team Leader Full Name *</label>
+            <label for="name">Full Name *</label>
             <input type="text" id="name" name="name" placeholder="Full Name" required />
           </div>
           <div class="form-group">
@@ -70,19 +70,18 @@
             <input type="tel" id="contact" name="contact" placeholder="10-digit number" pattern="[0-9]{10}" required />
           </div>
           <div class="form-group">
-            <label for="team_name">Year *</label>
-            <input type="text" id="team_name" name="team_name" placeholder="e.g. 2026" required />
+            <label for="team_name">Team / Clan Name (or Solo) *</label>
+            <input type="text" id="team_name" name="team_name" placeholder="Team Name or Solo" required />
           </div>
         </div>
 
         <!-- Payment Verification Box -->
         <div class="payment-box">
-          <h4>PAYMENT VERIFICATION (ENTRY FEE:25/Player)</h4>
+          <h4>PAYMENT VERIFICATION (ENTRY FEE: 25/Player)</h4>
           <p>Scan the official QR code or make a direct transfer to the UPI ID, then upload the receipt screenshot.</p>
           
           <div class="qr-container">
-            <!-- Update filename='your-new-image-name.png' to match your uploaded file -->
-              <img src="{{ url_for('static', filename='my-payment-qr.jpg') }}" alt="Payment QR Code" class="qr-img">
+            <img src="{{ url_for('static', filename='my-payment-qr.jpg') }}" alt="Payment QR Code" class="qr-img">
             <div class="upi-details">
               <div class="upi-text">
                 <span>UPI ID:</span> <strong>yr667721@oksbi</strong>

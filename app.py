@@ -113,9 +113,7 @@ def submit_registration():
 
     # Append directly to your Excel file
     try:
-        # Re-initialize Excel just in case the container spun down and wiped it
         init_excel()
-
         wb = openpyxl.load_workbook(EXCEL_FILE)
         ws = wb["Registrations"]
 

@@ -11,7 +11,7 @@
   <!-- Tech Geometric Background Overlay -->
   <div class="bg-overlay"></div>
 
-<!-- Navbar -->
+  <!-- Navbar -->
   <header class="navbar">
     <div class="logo">
       <img src="{{ url_for('static', filename='vazra-logo.png') }}" alt="VaZra Logo" class="nav-logo-img" />
@@ -23,7 +23,7 @@
       <a href="#rulebook">Rulebook</a>
     </nav>
   </header>
-</div>
+
   <!-- Flash Message Banner -->
   {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -40,7 +40,6 @@
     <div class="hero-live-badge"><span class="pulse-dot"></span> REGISTRATIONS OPEN</div>
     <h1>VaZra<br>GameVerse</h1>
     
-    <!-- Champion Privilege Subtitle (Inline Header) -->
     <div class="hero-perk-note">
       <div class="hero-perk-header">
         <span class="perk-lightning">⚡</span>
@@ -52,10 +51,11 @@
     <p>Select your battlefield, lock in your squad roster, and fight for collegiate glory.</p>
     <div class="ff-hazard-stripe"></div>
   </section>
+
   <!-- Arena Container with Posters -->
   <div class="arena-container">
     
-    <!-- BGMI Showcase Card (LOCKED / COMING SOON) -->
+    <!-- BGMI Showcase Card (LOCKED) -->
     <section id="bgmi-section" class="game-showcase-card is-locked">
       <div class="card-media-wrap">
         <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="BGMI Tournament" class="card-poster" />
@@ -91,13 +91,13 @@
           </div>
         </div>
 
-        <!-- Disabled Button -->
         <button type="button" class="btn-ff-action btn-disabled" disabled>
           🔒 REGISTRATION OPENS SOON
         </button>
       </div>
     </section>
-    <!-- Free Fire Showcase Card (OPEN & ACTIVE) -->
+
+    <!-- Free Fire Showcase Card (OPEN) -->
     <section id="freefire-section" class="game-showcase-card is-open">
       <div class="card-media-wrap">
         <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80" alt="Free Fire Tournament" class="card-poster" />
@@ -140,7 +140,6 @@
         </a>
       </div>
     </section>
-   
   </div>
 
   <!-- Official Rulebook & Scoring -->
@@ -196,18 +195,19 @@
       </div>
     </div>
   </section>
- <!-- About Us Section Positioned Under Match Directives -->
-        <div class="card-about-section">
-          <h1>About VaZra GameVerse</h1>
-          <p>
-            <strong>VaZra GameVerse</strong> is a growing esports and gaming community at <strong>ABES</strong>, built to bring gamers together to <strong>connect, compete, and grow</strong>. We organize regular tournaments across popular games like <span class="highlight-game">Free Fire MAX</span>, <span class="highlight-game">BGMI</span>, <span class="highlight-game">Valorant</span>, and more, giving players a platform to showcase their skills, compete for <strong>exciting rewards</strong>, and become part of a competitive gaming community.
-          </p>
-          <p class="community-tagline">Play. Compete. Belong.</p>
-        </div>
+
+  <!-- About Us Section -->
+  <div class="card-about-section" style="max-width: 1000px; margin: 3rem auto; padding: 2rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(0, 255, 204, 0.2); border-radius: 12px; text-align: center;">
+    <h1 style="color: #00ffcc; margin-bottom: 1rem;">About VaZra GameVerse</h1>
+    <p style="color: #cbd5e1; line-height: 1.6;">
+      <strong>VaZra GameVerse</strong> is a growing esports and gaming community at <strong>ABES</strong>, built to bring gamers together to <strong>connect, compete, and grow</strong>. We organize regular tournaments across popular games like <span class="highlight-game">Free Fire MAX</span>, <span class="highlight-game">BGMI</span>, <span class="highlight-game">Valorant</span>, and more, giving players a platform to showcase their skills, compete for <strong>exciting rewards</strong>, and become part of a competitive gaming community.
+    </p>
+    <p class="community-tagline" style="color: #00ffcc; font-weight: bold; margin-top: 1rem;">Play. Compete. Belong.</p>
+  </div>
 
   <footer>
     <p>© VaZra GameVerse <br>
-      A community built for gamers who want to <strong>CONNECT • COMPETE • CONQUER</strong></p>
+       A community built for gamers who want to <strong>CONNECT • COMPETE • CONQUER</strong></p>
   </footer>
 
 </body>
