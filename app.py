@@ -108,14 +108,18 @@ def submit_registration():
     # Send data to Google Apps Script Web App
     try:
         sheet_response = requests.post(GOOGLE_SHEET_WEBHOOK_URL, json=payload, timeout=15)
+        print("Google Sheet Response Status:", sheet_response.status_code)
+        print("Google Sheet Response Text:", sheet_response.text)
+        
         if sheet_response.status_code == 200:
             # Successfully logged to Google Sheets -> Redirect to Success Page
             return redirect(url_for('success_page'))
         else:
             flash("Registration data recorded, but sheet sync returned an error.")
     except Exception as e:
+        traceback.print_exc()
         print(f"Error syncing to Google Sheets: {e}")
-        flash("Server error during registration sync.")
+        flash(f"Server error during registration sync: {e}")
 
     return redirect(url_for('register_page', game_type=game_slug))
 
