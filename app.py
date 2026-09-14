@@ -22,7 +22,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw7clzvcXxn36IF0CREgdUy0dtdgBtDzt8fO8mekpWR24egbqH5-3-cehqlGmy0ku_F/exec"
 IMGBB_API_KEY = "60952399b196ee3750f4ee2c50a9ad4f"
 
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -46,7 +45,7 @@ def register_page(game_type):
         
     return render_template('register.html', game_title=game_title, bg_class=bg_class, game_slug=game_type)
 
-# Route 3: Form submission handler (Uploads image to cloud & logs to Google Sheets)
+# Route 3: Form submission handler
 @app.route('/submit-registration', methods=['POST'])
 def submit_registration():
     game = request.form.get('game')
@@ -65,34 +64,43 @@ def submit_registration():
         flash("Invalid file format. Please upload JPG, PNG, or PDF.")
         return redirect(url_for('register_page', game_type=game_slug))
 
-    screenshot_url = ""
+    screenshot_url = "No Image Uploaded"
 
     try:
-        # 1. Upload image to ImgBB cloud storage using a proper file tuple (filename, bytes)
+        # Read file bytes securely
         file_bytes = file.read()
-        imgbb_response = requests.post(
+        
+        # Call ImgBB API using standard multipart form data
+        response = requests.post(
             "https://api.imgbb.com/1/upload",
             data={"key": IMGBB_API_KEY},
-            files={"image": (file.filename, file_bytes)}
+            files={"image": (file.filename, file_bytes)},
+            timeout=15
         )
         
-        result_json = imgbb_response.json()
-        if result_json.get("success"):
-            screenshot_url = result_json["data"]["url"]
+        # Check response content
+        if response.status_code == 200:
+            res_json = response.json()
+            if res_json.get("success"):
+                screenshot_url = res_json["data"]["url"]
+            else:
+                print("ImgBB Rejected Upload:", res_json)
+                flash("Cloud rejected the image. Please try a different screenshot format.")
+                return redirect(url_for('register_page', game_type=game_slug))
         else:
-            print("ImgBB Rejection Response:", result_json)
-            flash("Failed to upload screenshot to cloud storage.")
+            print(f"ImgBB HTTP Error Status {response.status_code}: {response.text}")
+            flash("Cloud storage server error. Please check UTR and try again.")
             return redirect(url_for('register_page', game_type=game_slug))
 
     except Exception as e:
+        print(f"Exception during ImgBB upload: {e}")
         traceback.print_exc()
-        print(f"Cloud upload error: {e}")
-        flash("Error uploading payment proof.")
+        flash("Network error during image upload.")
         return redirect(url_for('register_page', game_type=game_slug))
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # 2. Prepare data payload for Google Sheets (including the public image link)
+    # Prepare data payload for Google Sheets
     payload = {
         "timestamp": timestamp,
         "game": game,
@@ -106,10 +114,10 @@ def submit_registration():
         "screenshot_url": screenshot_url
     }
 
-    # 3. Send data to Google Apps Script Web App
+    # Send data to Google Apps Script Web App
     try:
-        response = requests.post(GOOGLE_SHEET_WEBHOOK_URL, json=payload)
-        if response.status_code == 200:
+        sheet_response = requests.post(GOOGLE_SHEET_WEBHOOK_URL, json=payload, timeout=15)
+        if sheet_response.status_code == 200:
             flash(f"Slot registered successfully for {game}!")
         else:
             flash("Registered, but cloud sync failed. Please contact admin.")
