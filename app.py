@@ -22,42 +22,46 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def init_excel():
-    if not os.path.exists(EXCEL_FILE):
-        wb = openpyxl.Workbook()
-        ws = wb.active
-        ws.title = "Registrations"
-        ws.views.sheetView[0].showGridLines = True
+    try:
+        if not os.path.exists(EXCEL_FILE):
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = "Registrations"
+            ws.views.sheetView[0].showGridLines = True
 
-        headers = [
-            "Timestamp", "Game", "Team / Clan Name", "Team Leader Name", 
-            "Admission No", "Branch & Section", "In-Game ID / UID", 
-            "WhatsApp Number", "UPI Transaction ID (UTR)", "Payment Screenshot File"
-        ]
+            headers = [
+                "Timestamp", "Game", "Team / Clan Name", "Team Leader Name", 
+                "Admission No", "Branch & Section", "In-Game ID / UID", 
+                "WhatsApp Number", "UPI Transaction ID (UTR)", "Payment Screenshot File"
+            ]
 
-        header_fill = PatternFill(start_color="1A2536", end_color="1A2536", fill_type="solid")
-        header_font = Font(name="Calibri", size=11, bold=True, color="00FFCC")
-        
-        ws.append(headers)
-        ws.row_dimensions[1].height = 26
+            header_fill = PatternFill(start_color="1A2536", end_color="1A2536", fill_type="solid")
+            header_font = Font(name="Calibri", size=11, bold=True, color="00FFCC")
+            
+            ws.append(headers)
+            ws.row_dimensions[1].height = 26
 
-        thin_border = Border(
-            left=Side(style='thin', color='D0D7DE'),
-            right=Side(style='thin', color='D0D7DE'),
-            top=Side(style='thin', color='D0D7DE'),
-            bottom=Side(style='thin', color='D0D7DE')
-        )
+            thin_border = Border(
+                left=Side(style='thin', color='D0D7DE'),
+                right=Side(style='thin', color='D0D7DE'),
+                top=Side(style='thin', color='D0D7DE'),
+                bottom=Side(style='thin', color='D0D7DE')
+            )
 
-        for col_idx in range(1, len(headers) + 1):
-            cell = ws.cell(row=1, column=col_idx)
-            cell.fill = header_fill
-            cell.font = header_font
-            cell.alignment = Alignment(horizontal="center", vertical="center")
-            cell.border = thin_border
-            ws.column_dimensions[get_column_letter(col_idx)].width = 22
+            for col_idx in range(1, len(headers) + 1):
+                cell = ws.cell(row=1, column=col_idx)
+                cell.fill = header_fill
+                cell.font = header_font
+                cell.alignment = Alignment(horizontal="center", vertical="center")
+                cell.border = thin_border
+                ws.column_dimensions[get_column_letter(col_idx)].width = 22
 
-        wb.save(EXCEL_FILE)
-        wb.close()
+            wb.save(EXCEL_FILE)
+            wb.close()
+    except Exception as e:
+        print(f"Error initializing Excel: {e}")
 
+# Initialize on startup
 init_excel()
 
 # Route 1: Home Page
@@ -109,6 +113,9 @@ def submit_registration():
 
     # Append directly to your Excel file
     try:
+        # Re-initialize Excel just in case the container spun down and wiped it
+        init_excel()
+
         wb = openpyxl.load_workbook(EXCEL_FILE)
         ws = wb["Registrations"]
 
@@ -136,11 +143,9 @@ def submit_registration():
         wb.save(EXCEL_FILE)
         wb.close()
         flash(f"Slot registered successfully for {game}!")
-    except PermissionError:
-        flash("Excel file is open on your PC. Please close it so the system can save.")
     except Exception as e:
-        print(f"Error saving to Excel: {e}")
-        flash("Server error while saving details.")
+        print(f"CRITICAL Error saving to Excel: {e}")
+        flash("Server error while saving details. Please contact support.")
 
     return redirect(url_for('register_page', game_type=game_slug))
 
