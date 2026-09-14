@@ -45,7 +45,12 @@ def register_page(game_type):
         
     return render_template('register.html', game_title=game_title, bg_class=bg_class, game_slug=game_type)
 
-# Route 3: Form submission handler
+# Route 3: Success Confirmation Page
+@app.route('/success')
+def success_page():
+    return render_template('success.html')
+
+# Route 4: Form submission handler
 @app.route('/submit-registration', methods=['POST'])
 def submit_registration():
     game = request.form.get('game')
@@ -104,7 +109,8 @@ def submit_registration():
     try:
         sheet_response = requests.post(GOOGLE_SHEET_WEBHOOK_URL, json=payload, timeout=15)
         if sheet_response.status_code == 200:
-            flash(f"Slot registered successfully for {game}!")
+            # Successfully logged to Google Sheets -> Redirect to Success Page
+            return redirect(url_for('success_page'))
         else:
             flash("Registration data recorded, but sheet sync returned an error.")
     except Exception as e:
