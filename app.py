@@ -60,43 +60,29 @@ def submit_registration():
 
     # Get uploaded file
     file = request.files.get('payment_screenshot')
-    if not file or file.filename == '' or not allowed_file(file.filename):
-        flash("Invalid file format. Please upload JPG, PNG, or PDF.")
-        return redirect(url_for('register_page', game_type=game_slug))
-
-    screenshot_url = "No Image Uploaded"
-
-    try:
-        # Read file bytes securely
-        file_bytes = file.read()
-        
-        # Call ImgBB API using standard multipart form data
-        response = requests.post(
-            "https://api.imgbb.com/1/upload",
-            data={"key": IMGBB_API_KEY},
-            files={"image": (file.filename, file_bytes)},
-            timeout=15
-        )
-        
-        # Check response content
-        if response.status_code == 200:
-            res_json = response.json()
-            if res_json.get("success"):
-                screenshot_url = res_json["data"]["url"]
+    if not file or file.filename == '':
+        screenshot_url = "No Image Uploaded"
+    else:
+        screenshot_url = "Cloud Upload Failed - Check UTR"
+        try:
+            file_bytes = file.read()
+            response = requests.post(
+                "https://api.imgbb.com/1/upload",
+                data={"key": IMGBB_API_KEY},
+                files={"image": (file.filename, file_bytes)},
+                timeout=15
+            )
+            
+            if response.status_code == 200:
+                res_json = response.json()
+                if res_json.get("success"):
+                    screenshot_url = res_json["data"]["url"]
+                else:
+                    print("ImgBB Rejected Upload:", res_json)
             else:
-                print("ImgBB Rejected Upload:", res_json)
-                flash("Cloud rejected the image. Please try a different screenshot format.")
-                return redirect(url_for('register_page', game_type=game_slug))
-        else:
-            print(f"ImgBB HTTP Error Status {response.status_code}: {response.text}")
-            flash("Cloud storage server error. Please check UTR and try again.")
-            return redirect(url_for('register_page', game_type=game_slug))
-
-    except Exception as e:
-        print(f"Exception during ImgBB upload: {e}")
-        traceback.print_exc()
-        flash("Network error during image upload.")
-        return redirect(url_for('register_page', game_type=game_slug))
+                print(f"ImgBB HTTP Error Status {response.status_code}: {response.text}")
+        except Exception as e:
+            print(f"Exception during ImgBB upload on Render: {e}")
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -120,7 +106,7 @@ def submit_registration():
         if sheet_response.status_code == 200:
             flash(f"Slot registered successfully for {game}!")
         else:
-            flash("Registered, but cloud sync failed. Please contact admin.")
+            flash("Registration data recorded, but sheet sync returned an error.")
     except Exception as e:
         print(f"Error syncing to Google Sheets: {e}")
         flash("Server error during registration sync.")
