@@ -16,9 +16,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # -------------------------------------------------------------
-# PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW:
+# CONFIGURATION
 # -------------------------------------------------------------
-GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx_E1UTPZs-wc7zMCOLNWxVDpUv8IEM9UCjYR9hxSf4rI1KEcPy62s0I-tnRlsm1d5Y/exec"
+GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw7clzvcXxn36IF0CREgdUy0dtdgBtDzt8fO8mekpWR24egbqH5-3-cehqlGmy0ku_F/exec"
+IMGBB_API_KEY = "https://api.imgbb.com/1/upload"
 
 
 def allowed_file(filename):
@@ -44,7 +45,7 @@ def register_page(game_type):
         
     return render_template('register.html', game_title=game_title, bg_class=bg_class, game_slug=game_type)
 
-# Route 3: Form submission handler (Sends data directly to Google Sheets)
+# Route 3: Form submission handler (Uploads image to cloud & logs to Google Sheets)
 @app.route('/submit-registration', methods=['POST'])
 def submit_registration():
     game = request.form.get('game')
@@ -57,21 +58,38 @@ def submit_registration():
     utr_id = request.form.get('utr_id')
     game_slug = request.form.get('game_slug', 'freefire')
 
-    # Save payment screenshot locally
+    # Get uploaded file
     file = request.files.get('payment_screenshot')
     if not file or file.filename == '' or not allowed_file(file.filename):
         flash("Invalid file format. Please upload JPG, PNG, or PDF.")
         return redirect(url_for('register_page', game_type=game_slug))
 
-    timestamp_str = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    safe_name = secure_filename(file.filename)
-    filename = f"{admission_no}_{timestamp_str}_{safe_name}"
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    file.save(file_path)
+    screenshot_url = ""
+
+    try:
+        # 1. Upload image to ImgBB cloud storage
+        file_bytes = file.read()
+        imgbb_response = requests.post(
+            "https://api.imgbb.com/1/upload",
+            data={"key": IMGBB_API_KEY},
+            files={"image": file_bytes}
+        )
+        
+        result_json = imgbb_response.json()
+        if result_json.get("success"):
+            screenshot_url = result_json["data"]["url"]
+        else:
+            flash("Failed to upload screenshot to cloud storage.")
+            return redirect(url_for('register_page', game_type=game_slug))
+
+    except Exception as e:
+        print(f"Cloud upload error: {e}")
+        flash("Error uploading payment proof.")
+        return redirect(url_for('register_page', game_type=game_slug))
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Prepare data payload for Google Sheets
+    # 2. Prepare data payload for Google Sheets (including the public image link)
     payload = {
         "timestamp": timestamp,
         "game": game,
@@ -82,10 +100,10 @@ def submit_registration():
         "in_game_id": in_game_id,
         "contact": contact,
         "utr_id": utr_id,
-        "screenshot_filename": filename
+        "screenshot_url": screenshot_url
     }
 
-    # Send data to Google Apps Script Web App
+    # 3. Send data to Google Apps Script Web App
     try:
         response = requests.post(GOOGLE_SHEET_WEBHOOK_URL, json=payload)
         if response.status_code == 200:
